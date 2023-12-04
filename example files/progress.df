@@ -1,0 +1,26 @@
+ADD TABLE "Employee"
+  AREA "Info Area"
+  Description "Employee information"
+  DUMP-NAME "employee"
+
+ADD FIELD "employee_id" OF "Employee" AS integer
+
+ADD FIELD "employee_first_name" OF "Employee" AS character
+  MAX-WIDTH 40
+
+ADD FIELD "employee_last_name" OF "Employee" AS character
+  MAX-WIDTH 40
+
+ADD FIELD "employee_profile_url" OF "Employee" AS character
+  MAX-WIDTH 60
+
+ADD INDEX "Employee_Id" ON "Employee"
+  AREA "Info Area"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "employee_id" ASCENDING
+
+ADD INDEX "Employee_Profile" ON "Employee"
+  AREA "Info Area"
+  UNIQUE
+  INDEX-FIELD "employee_profile_url" ASCENDING
