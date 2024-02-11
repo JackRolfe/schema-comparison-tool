@@ -4,10 +4,6 @@ import diff_match_patch as dmp_module
 from io import StringIO
 import time
 from openai import OpenAI
-from dotenv import load_dotenv
-
-
-#load_dotenv()
 
 st.set_page_config(layout="wide", page_title="Schema Comparison Tool")
 
