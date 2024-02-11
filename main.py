@@ -1,80 +1,8 @@
+from streamlit_extras.stylable_container import stylable_container
 import streamlit as st
 import diff_match_patch as dmp_module
 from io import StringIO
-import time
-from openai import OpenAI
-from dotenv import load_dotenv
-import os
-import os
-
-load_dotenv()
-
-file1_name = "file1.txt"
-file2_name = "file2.txt"
-
-dirname = os.path.dirname(__file__)
-file1_path = os.path.join(dirname, "input-files/" + file1_name)
-file2_path = os.path.join(dirname, "input-files/" + file2_name)
-
-def ai_compare_files():
-    client = OpenAI()
-
-    file1 = client.files.create(
-        file=open(file1_path, "rb"),
-        purpose='assistants'
-    )
-
-    file2 = client.files.create(
-        file=open(file2_path, "rb"),
-        purpose='assistants'
-    )
-
-    assistant = client.beta.assistants.create(
-        name="schemahelper",
-        instructions="You are a helpful text comparison assistant. You compare two files against each other and display the differences in an easy to understand way.",
-        model="gpt-4-1106-preview",
-        tools=[{"type": "retrieval"}],
-        file_ids=[file1.id, file2.id]
-    )
-
-    thread = client.beta.threads.create()
-
-    message = client.beta.threads.messages.create(
-        thread_id=thread.id,
-        role="user",
-        content="Compare the two .txt files " + file1_name + " and " + file2_name + " against each other and display the differences in their schemas."
-    )
-
-    run = client.beta.threads.runs.create(
-        thread_id=thread.id,
-        assistant_id=assistant.id
-    )
-
-    time.sleep(120)
-
-    messages = client.beta.threads.messages.list(
-        thread_id=thread.id
-    )
-
-    f = open("output-files/output.txt", "w")
-    output_string = 'Schema AI Response:\n\n'
-    for message_output in messages.data:
-        output_string = output_string + str(message_output.content[0].text.value) + '\n'
-
-    f.write(output_string)
-    f.close()
-
-    st.write(output_string, unsafe_allow_html=True)
-
-    file_deletion_status1 = client.beta.assistants.files.delete(
-        assistant_id=assistant.id,
-        file_id=file1.id
-    )
-
-    file_deletion_status2 = client.beta.assistants.files.delete(
-        assistant_id=assistant.id,
-        file_id=file2.id
-    )
+from openai_assistant.openai_assistant import ai_compare_files
 
 st.set_page_config(layout="wide", page_title="Schema Comparison Tool")
 
@@ -90,55 +18,71 @@ st.write(
     "The 'Compare Schema' button compares files with a different structure. For example, comparing one .df file and one .sql file. It is useful for comparing the schema of a source system to a datawarehouse."
 )
 
-#st.sidebar.write("## Sidebar:")
-
 col1, col2 = st.columns(2)
 my_upload1 = col1.file_uploader("Upload the first schema", type=["txt", "sql", "df"])
 my_upload2 = col2.file_uploader("Upload the second schema", type=["txt", "sql", "df"])
 
 if my_upload1 is not None:
-    if not os.path.exists("input-files"):
-        os.makedirs("input-files")
-    bytes_data1 = my_upload1.getvalue()
-    # To convert to a string based IO:
     stringio1 = StringIO(my_upload1.getvalue().decode("utf-8"))
-    # To read file as string:
     string_data1 = stringio1.read()
-    col1.write(string_data1)
-
-    f1 = open(file1_path, "w")
-    f1.write(string_data1)
-    f1.close()
+    col1.code(string_data1)
 
 if my_upload2 is not None:
-    if not os.path.exists("input-files"):
-        os.makedirs("input-files")
-    bytes_data2 = my_upload2.getvalue()
-    # To convert to a string based IO:
     stringio2 = StringIO(my_upload2.getvalue().decode("utf-8"))
-    # To read file as string:
     string_data2 = stringio2.read()
-    col2.write(string_data2)
+    col2.code(string_data2)
 
-    f2 = open(file2_path, "w")
-    f2.write(string_data2)
-    f2.close()
+if 'difference_clicked' not in st.session_state:
+    st.session_state.difference_clicked = False
 
-if st.button('Check the Difference'):
-    if not os.path.exists("output-files"):
-        os.makedirs("output-files")
+def click_difference_button():
+    st.session_state.difference_clicked = True
+
+st.button('Check the Difference', on_click=click_difference_button)
+
+if st.session_state.difference_clicked:
     dmp = dmp_module.diff_match_patch()
-    diff = dmp.diff_main(string_data1, string_data2)
-    dmp.diff_cleanupSemantic(diff)
-    html_diff = dmp.diff_prettyHtml(diff)
-        
-    st.write(html_diff, unsafe_allow_html=True)
 
-    with open("output-files/diff.html", "w") as file:
-        file.write(html_diff)
+    # Using LBYL instead of EAFP because "try: var" writes to screen
+    string_data1_exists = 'string_data1' in locals() or 'string_data1' in globals()
+    string_data2_exists = 'string_data2' in locals() or 'string_data2' in globals()
 
+    if string_data1_exists == True and string_data2_exists == True:
+        diff = dmp.diff_main(string_data1, string_data2)
+        dmp.diff_cleanupSemantic(diff)
+        html_diff = dmp.diff_prettyHtml(diff)
 
-if st.button('Compare Schema'):
-    if not os.path.exists("output-files"):
-        os.makedirs("output-files")
-    ai_compare_files()
+        # Styled container import because native streamlit doesn't allow container background colour changes
+        with stylable_container(
+            key="container_with_background",
+            css_styles="""
+                {
+                    border-radius: 0.5rem;
+                    padding: calc(1em - 1px);
+                    background: rgb(248, 249, 251)
+                }
+                """,
+        ):
+            st.markdown(html_diff, unsafe_allow_html=True)
+            st.download_button(
+                label="Download Diff",
+                data=html_diff,
+                file_name='schema_diff.html'
+            )
+
+if 'compare_clicked' not in st.session_state:
+    st.session_state.compare_clicked = False
+
+def click_compare_button():
+    st.session_state.compare_clicked = True
+
+st.button('Compare Schema', on_click=click_compare_button)
+
+if st.session_state.compare_clicked:
+    ai_response = ai_compare_files(string_data1, string_data2)
+    st.code(ai_response)
+    st.download_button(
+        label="Download AI Response",
+        data=ai_response,
+        file_name='ai_schema_diff.txt'
+    )
