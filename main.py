@@ -9,7 +9,7 @@ st.set_page_config(layout="wide", page_title="Schema Comparison Tool")
 
 st.write("## Compare Two Database Definition Files")
 st.write(
-    "This application allows you to compare two text files. It is specifically designed to compare database definition files (.sql or .df), but any text file will work."
+    "This application allows you to compare two text files. It is specifically designed to compare database definition files (.sql or .df), but any text file should work."
 )
 st.write(
     "The 'Check the Difference' button compares files with a similar structure. For example, comparing two .sql files. It is useful for viewing how a database schema might change. This might be useful during application upgrades, or when comparing UAT vs Production environments."
