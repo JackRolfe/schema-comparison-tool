@@ -26,34 +26,34 @@ Outputs must be valid markdown.
 ## EXAMPLE OUTPUT
 differences:
   - table:
-      schema_1: "finance.Employee"
-      schema_2: "Employee"
+      schema_1: "enrollments.Student"
+      schema_2: "Student"
     columns:
       - name:
-          schema_1: "employee_id"
-          schema_2: "EmployeeId"
+          schema_1: "student_id"
+          schema_2: "StudentId"
         - type: 
             schema_1: "serial"
             schema_2: "integer"
       - name:
-          schema_1: "employee_first_name"
-          schema_2: "EmployeeFirstName"
+          schema_1: "student_first_name"
+          schema_2: "StudentFirstName"
         - type: 
             schema_1: "text"
             schema_2: "character (MAX-WIDTH 40)"
       - name:
-          schema_1: "employee_profile_url"
-          schema_2: "EmployeeProfileUrl"
+          schema_1: "student_profile_url"
+          schema_2: "StudentProfileUrl"
         - type:
             schema_1: "text"
             schema_2: "character (MAX-WIDTH 60)"
       - constraints: 
           primary_key:
-            schema_1: "employee_id"
-            schema_2: "EmployeeId", "EmployeeCode"
+            schema_1: "student_id"
+            schema_2: "StudentId", "StudentCode"
     extras:
         - columns:
-            schema_2: "EmployeeCode"
+            schema_2: "StudentCode"
         - constraints:
             schema_1: "UNIQUE"
-                - columns: "employee_profile_url"
+                - columns: "student_profile_url"

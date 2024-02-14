@@ -85,8 +85,8 @@ Schema 2
     return output_string
 
 col1, col2 = st.columns(2)
-my_upload1 = col1.file_uploader("Upload the first schema", type=["txt", "sql", "df"])
-my_upload2 = col2.file_uploader("Upload the second schema", type=["txt", "sql", "df"])
+my_upload1 = col1.file_uploader("Upload the first schema", type=["txt", "sql", "df", "json"])
+my_upload2 = col2.file_uploader("Upload the second schema", type=["txt", "sql", "df", "json"])
 
 if my_upload1 is not None:
     stringio1 = StringIO(my_upload1.getvalue().decode("utf-8"))

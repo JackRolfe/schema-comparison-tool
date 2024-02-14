@@ -1,0 +1,20 @@
+{
+  "tableName": "StudentData",
+  "schema": "enrollments",
+  "columns": {
+      "StudentId": {
+          "type": "serial",
+          "constraints": ["PRIMARY KEY"]
+      },
+      "StudentFirstName": {
+          "type": "text"
+      },
+      "StudentLastName": {
+          "type": "text"
+      },
+      "StudentProfileUrl": {
+          "type": "text",
+          "constraints": ["UNIQUE"]
+      }
+  }
+}
