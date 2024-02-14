@@ -10,6 +10,7 @@ Existing schema comparison tools (such as Azure Data Studio's Schema Compare ext
 - Struggle to compare dramatically different formats such as SQL vs Progress
 By utilising an LLM, novel data schemas can be compared. This comes with the tradeoff of being less precise.
 
+#### Existing Tooling
 - [Azure Data Studio Schema Compare extension](https://learn.microsoft.com/en-us/azure-data-studio/extensions/schema-compare-extension)
 - [SQL Server Data Tools (SSDT) Schema Compare utility](https://learn.microsoft.com/en-us/sql/ssdt/how-to-use-schema-compare-to-compare-different-database-definitions?view=sql-server-ver16)
 
