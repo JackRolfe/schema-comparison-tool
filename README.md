@@ -39,8 +39,9 @@ The application uses:
 This application can be implemented using the OpenAI Playground: `https://platform.openai.com/playground`
 - Create a new assistant and paste the contents of "assistant_instructions.txt" into the Instructions area.
 - In the user input area (where it says "Enter your message..."), input your two schemas in the below format. The agent will respond with the differences between the schemas.
-Schema 1  
----  
+```
+Schema 1
+---
 CREATE TABLE "admissions"."student"
 (
     "student_id" serial,
@@ -53,8 +54,8 @@ CREATE TABLE "admissions"."student"
 ---  
 
 
-Schema 2  
----  
+Schema 2
+---
 {
   "tableName": "StudentData",
   "schema": "enrollments",
@@ -76,3 +77,4 @@ Schema 2
   }
 }
 ---
+```
