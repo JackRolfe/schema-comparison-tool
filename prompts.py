@@ -1,3 +1,5 @@
+def get_assistant_instructions() -> str:
+    assistant_instructions = """
 ## MISSION
 Display the differences between two data schemas.
 
@@ -57,3 +59,19 @@ differences:
         - constraints:
             schema_1: "UNIQUE"
                 - columns: "student_profile_url"
+"""
+    return assistant_instructions
+
+def get_schema_input(schema_1: str, schema_2: str) -> str:
+    schema_input = """
+Schema 1
+---
+""" + schema_1 + """
+---
+
+
+Schema 2
+---
+""" + schema_2 + """
+---"""
+    return schema_input
