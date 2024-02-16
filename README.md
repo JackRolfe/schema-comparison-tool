@@ -40,7 +40,7 @@ The application uses:
 
 ## Alternative Implementation
 This application can be implemented using the [OpenAI Playground](https://platform.openai.com/playground)
-- Create a new assistant and paste the contents of "assistant_instructions.txt" into the Instructions area.
+- Create a new assistant and paste the contents of "assistant_instructions" variable from the prompts.py file into the Instructions area.
 - In the user input area (where it says "Enter your message..."), input your two schemas in the below format. The agent will respond with the differences between the schemas.
 ```
 Schema 1
